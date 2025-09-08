@@ -1,31 +1,41 @@
-// Lista de productos
+// Lista de productos con categoría
 const productos = [
-  { id: 1, nombre: "Galletitas", precio: 1200, imagen: "img/galletitas.jpg" },
-  { id: 2, nombre: "Jugo", precio: 800, imagen: "img/jugo.jpg" },
-  { id: 3, nombre: "Caramelos", precio: 500, imagen: "img/caramelos.jpg" },
-  { id: 4, nombre: "Alfajores Maixanas x14u", precio: 23200, imagen: "img/maixanasDubai.jpg" },
+  { id: 1, nombre: "Galletitas", precio: 1200, imagen: "img/galletitas.jpg", categoria: "Golosinas" },
+  { id: 2, nombre: "Jugo", precio: 800, imagen: "img/jugo.jpg", categoria: "Bebidas" },
+  { id: 3, nombre: "Caramelos", precio: 500, imagen: "img/caramelos.jpg", categoria: "Golosinas" },
+  { id: 4, nombre: "Alfajores Maixanas x14u", precio: 23200, imagen: "img/maixanasDubai.jpg", categoria: "Golosinas" },
 ];
 
 let carrito = [];
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 
-// Renderizar productos
-function mostrarProductos() {
+// Renderizar productos con filtro de categoría
+function mostrarProductos(categoria = "Todas") {
   contenedor.innerHTML = "";
-  productos.forEach(prod => {
+
+  let lista = productos;
+  if (categoria !== "Todas") {
+    lista = productos.filter(p => p.categoria === categoria);
+  }
+
+  lista.forEach(prod => {
     const card = document.createElement("div");
     card.classList.add("card");
+
+    const cantidadActual = carrito.find(p => p.id === prod.id)?.cantidad || 0;
+
     card.innerHTML = `
       <img src="${prod.imagen}" alt="${prod.nombre}">
       <h2>${prod.nombre}</h2>
       <p>$${prod.precio}</p>
       <div class="contador">
         <button onclick="modificarCantidad(${prod.id}, -1)">-</button>
-        <span id="cantidad-${prod.id}">0</span>
+        <span id="cantidad-${prod.id}">${cantidadActual}</span>
         <button onclick="modificarCantidad(${prod.id}, 1)">+</button>
       </div>
     `;
+
     contenedor.appendChild(card);
   });
 }
@@ -56,6 +66,11 @@ function modificarCantidad(id, cambio) {
 
   calcularTotal();
 }
+
+// Evento cambio de categoría
+document.getElementById("categoria").addEventListener("change", (e) => {
+  mostrarProductos(e.target.value);
+});
 
 // Abrir modal al presionar botón WhatsApp
 document.getElementById("btn-whatsapp").addEventListener("click", () => {

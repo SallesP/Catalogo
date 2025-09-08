@@ -143,6 +143,17 @@ footer {
   width: 300px;
 }
 
+.filtro-categoria {
+  margin: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.filtro-categoria select {
+  padding: 5px;
+}
+
 #modalCliente label {
   display: block;
   margin-top: 10px;
