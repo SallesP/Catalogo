@@ -94,3 +94,27 @@ footer {
 #btn-whatsapp:hover {
   background: #20b954;
 }
+
+.contador {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.contador button {
+  padding: 5px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.contador span {
+  min-width: 20px;
+  text-align: center;
+  font-weight: bold;
+}

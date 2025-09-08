@@ -1,4 +1,4 @@
-// Lista de productos (podés editar, agregar o quitar sin tocar el HTML)
+// Lista de productos
 const productos = [
   { id: 1, nombre: "Galletitas", precio: 1200, imagen: "img/galletitas.jpg" },
   { id: 2, nombre: "Jugo", precio: 800, imagen: "img/jugo.jpg" },
@@ -9,9 +9,10 @@ const productos = [
 // Carrito vacío al inicio
 let carrito = [];
 
-// Renderizar productos en la página
+// Contenedor de productos
 const contenedor = document.getElementById("productos");
 
+// Renderizar productos
 function mostrarProductos() {
   contenedor.innerHTML = ""; // limpio por si se vuelve a renderizar
 
@@ -23,18 +24,40 @@ function mostrarProductos() {
       <img src="${prod.imagen}" alt="${prod.nombre}">
       <h2>${prod.nombre}</h2>
       <p>$${prod.precio}</p>
-      <button onclick="agregarAlCarrito(${prod.id})">Agregar</button>
+      <div class="contador">
+        <button onclick="modificarCantidad(${prod.id}, -1)">-</button>
+        <span id="cantidad-${prod.id}">0</span>
+        <button onclick="modificarCantidad(${prod.id}, 1)">+</button>
+      </div>
     `;
 
     contenedor.appendChild(card);
   });
 }
 
-// Agregar producto al carrito
-function agregarAlCarrito(id) {
-  const producto = productos.find((p) => p.id === id);
-  carrito.push(producto);
-  alert(`${producto.nombre} agregado al carrito ✅`);
+// Función para modificar cantidad
+function modificarCantidad(id, cambio) {
+  let item = carrito.find((p) => p.id === id);
+
+  if (!item) {
+    // Si no está en el carrito y cambio > 0, lo agregamos
+    if (cambio > 0) {
+      const producto = productos.find((p) => p.id === id);
+      item = { id: producto.id, nombre: producto.nombre, precio: producto.precio, cantidad: 0 };
+      carrito.push(item);
+    } else {
+      return; // no se puede restar si no está
+    }
+  }
+
+  item.cantidad += cambio;
+  if (item.cantidad < 0) item.cantidad = 0;
+
+  // Actualizamos el contador en la tarjeta
+  document.getElementById(`cantidad-${id}`).textContent = item.cantidad;
+
+  // Opcional: eliminar del carrito si cantidad = 0
+  carrito = carrito.filter((p) => p.cantidad > 0);
 }
 
 // Generar link de WhatsApp
@@ -47,11 +70,10 @@ function enviarPedidoWhatsApp() {
   let mensaje = "Hola, quiero pedir estos productos:\n";
 
   carrito.forEach((p, i) => {
-    mensaje += `${i + 1}. ${p.nombre} - $${p.precio}\n`;
+    mensaje += `${i + 1}. ${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}\n`;
   });
 
-  // Número de WhatsApp al que querés recibir pedidos
-  const telefono = "1559221201"; // <-- cambiá por tu número
+  const telefono = "54911XXXXXXXX"; // <-- tu número
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 
   window.open(url, "_blank");
