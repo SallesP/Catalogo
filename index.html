@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo</title>
+  <title>Catálogo de Productos</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { text-align: center; padding: 20px; background: #f5f5f5; }
+    .grid { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; justify-content: center; }
+    .card { border: 1px solid #ccc; border-radius: 10px; padding: 10px; text-align: center; width: 200px; }
+    .contador button { padding: 5px 10px; margin: 0 5px; }
+    .total { margin-top: 20px; font-weight: bold; font-size: 1.2em; }
+    /* Sección cliente oculta */
+    #seccionCliente { display: none; padding: 20px; max-width: 400px; margin: 20px auto; border: 1px solid #ccc; border-radius: 10px; background: #f9f9f9; }
+    #seccionCliente label { display: block; margin: 10px 0 5px; }
+    #seccionCliente input { width: 100%; padding: 8px; box-sizing: border-box; }
+    #seccionCliente button { margin-top: 15px; padding: 10px; width: 48%; }
+  </style>
 </head>
 <body>
   <header>
@@ -12,29 +25,38 @@
   </header>
 
   <main>
+    <!-- Sección catálogo -->
     <section id="productos" class="grid">
-      <div class="card">
-        <img src="img/galletitas.jpg" alt="Galletitas">
-        <h2>Galletitas</h2>
-        <p>$1200</p>
-        <button>Agregar</button>
-      </div>
-
-      <div class="card">
-        <img src="img/jugo.jpg" alt="Jugo">
-        <h2>Jugo</h2>
-        <p>$800</p>
-        <button>Agregar</button>
-      </div>
+      <!-- Productos se insertan con JS -->
     </section>
+    <!-- Modal de datos del cliente -->
+    <div id="modalCliente" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content:center; align-items:center; display:flex;">
+      <div style="background:white; padding:20px; border-radius:10px; width:300px;">
+        <h2>Datos del Cliente</h2>
+        <label>Nombre:</label>
+        <input type="text" id="nombre" style="width:100%; margin-bottom:10px;">
+        <label>Dirección:</label>
+        <input type="text" id="direccion" style="width:100%; margin-bottom:10px;">
+        <label>Localidad:</label>
+        <input type="text" id="localidad" style="width:100%; margin-bottom:10px;">
+        <label>Horarios:</label>
+        <input type="text" id="horarios" style="width:100%; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; margin-top:10px;">
+          <button id="cancelarCliente">Cancelar</button>
+          <button id="enviarCliente">Enviar</button>
+        </div>
+      </div>
+    </div>
 
-    <p class="total">Total: $<span id="total">0</span>
-</p>
+    <p class="total">Total: $<span id="total">0</span></p>
+
+    <div style="text-align:center; margin: 20px;">
+
+
+
+      <button id="btn-whatsapp">Enviar pedido por WhatsApp</button>
+    </div>
   </main>
-
-  <footer>
-    <button id="btn-whatsapp">Enviar pedido por WhatsApp</button>
-  </footer>
 
   <script src="app.js"></script>
 </body>

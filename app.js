@@ -63,49 +63,57 @@ function modificarCantidad(id, cambio) {
   calcularTotal();
 }
 
-// Generar mensaje de WhatsApp
-function mensajeWhatsapp() {
+document.getElementById("btn-whatsapp").addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("El carrito está vacío 😅");
-    return "";
+    return;
+  }
+  document.getElementById("modalCliente").style.display = "flex";
+});
+
+// Cancelar modal
+document.getElementById("cancelarCliente").addEventListener("click", () => {
+  document.getElementById("modalCliente").style.display = "none";
+});
+
+// Función para enviar WhatsApp con datos del cliente
+document.getElementById("enviarCliente").addEventListener("click", () => {
+  const nombre = document.getElementById("nombre").value.trim();
+  const direccion = document.getElementById("direccion").value.trim();
+  const localidad = document.getElementById("localidad").value.trim();
+  const horarios = document.getElementById("horarios").value.trim();
+
+  if (!nombre || !direccion || !localidad || !horarios) {
+    alert("Por favor, completa todos los datos del cliente.");
+    return;
   }
 
   // Generar la “tabla” de productos
   const productosTexto = carrito.map(p => {
     let subtotal = p.precio * p.cantidad;
-    // Ajustamos espacios para alinear un poco tipo tabla
-    let nombre = p.nombre.padEnd(20, " "); // rellena hasta 20 caracteres
+    let nombreProd = p.nombre.padEnd(20, " ");
     let cantidad = p.cantidad.toString().padStart(2, " ");
     let totalProd = subtotal.toString().padStart(6, " ");
-    return `${nombre} x${cantidad} = $${totalProd}`;
+    return `${nombreProd} x${cantidad} = $${totalProd}`;
   }).join("\n");
 
-  const total = calcularTotal();
+  const total = carrito.reduce((acum, p) => acum + p.precio * p.cantidad, 0);
 
-  return encodeURIComponent(
+  const mensaje = encodeURIComponent(
     `Hola! Aquí está mi pedido:\n\n` +
-    `Producto             Cant  Total\n` +  // cabecera
+    `Cliente: ${nombre}\n` +
+    `Dirección: ${direccion}\n` +
+    `Localidad: ${localidad}\n` +
+    `Horarios: ${horarios}\n\n` +
+    `Producto             Cant  Total\n` +
     `--------------------------------\n` +
     `${productosTexto}\n` +
     `--------------------------------\n` +
     `TOTAL: $${total}`
   );
 
-}
+  const telefono = "5491159221201"; // formato internacional
+  window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
 
-// Enviar por WhatsApp
-document.getElementById("btn-whatsapp").addEventListener("click", () => {
-  const telefono = "5491159221201"; // ARG formato internacional
-  const mensaje = mensajeWhatsapp();
-
-  if (!mensaje) return;
-
-  // Reemplazamos saltos de línea por %0A para WhatsApp
-  const mensajeURL = mensaje.replace(/%0A/g, '%0A'); // opcional, pero asegura compatibilidad
-
-  // Abrir WhatsApp Web
-  window.open(`https://wa.me/${telefono}?text=${mensajeURL}`, "_blank");
+  document.getElementById("modalCliente").style.display = "none";
 });
-
-// Render inicial
-mostrarProductos();
