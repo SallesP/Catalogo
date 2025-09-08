@@ -70,9 +70,27 @@ function mensajeWhatsapp() {
     return "";
   }
 
-  const productosTexto = carrito.map(p => `${p.nombre} x${p.cantidad}: $${p.precio * p.cantidad}`).join("\n");
+  // Generar la “tabla” de productos
+  const productosTexto = carrito.map(p => {
+    let subtotal = p.precio * p.cantidad;
+    // Ajustamos espacios para alinear un poco tipo tabla
+    let nombre = p.nombre.padEnd(20, " "); // rellena hasta 20 caracteres
+    let cantidad = p.cantidad.toString().padStart(2, " ");
+    let totalProd = subtotal.toString().padStart(6, " ");
+    return `${nombre} x${cantidad} = $${totalProd}`;
+  }).join("\n");
+
   const total = calcularTotal();
-  return encodeURIComponent(`Hola! Aquí está mi pedido:\n${productosTexto}\nTotal: $${total}`);
+
+  return encodeURIComponent(
+    `Hola! Aquí está mi pedido:\n\n` +
+    `Producto             Cant  Total\n` +  // cabecera
+    `--------------------------------\n` +
+    `${productosTexto}\n` +
+    `--------------------------------\n` +
+    `TOTAL: $${total}`
+  );
+
 }
 
 // Enviar por WhatsApp
