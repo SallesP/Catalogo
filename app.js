@@ -73,7 +73,7 @@ function enviarPedidoWhatsApp() {
     mensaje += `${i + 1}. ${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}\n`;
   });
 
-  const telefono = "5491159221201"; // <-- tu número
+  const telefono = "1159221201"; // <-- tu número
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
 
   window.open(url, "_blank");
