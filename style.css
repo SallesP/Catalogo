@@ -144,10 +144,8 @@ footer {
 }
 
 .filtro-categoria {
+  display: inline-block;
   margin: 10px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
 }
 
 .filtro-categoria select {
