@@ -89,7 +89,6 @@ function enviarPedidoWhatsApp() {
 }
 
 // Evento del botón de WhatsApp
-// Evento del botón
 document.getElementById("enviarWhatsapp").addEventListener("click", () => {
     let mensaje = mensajeWhatsapp();
     // Abrir WhatsApp Web o la app
