@@ -35,6 +35,13 @@ function mostrarProductos() {
   });
 }
 
+// Función para calcular el total
+function calcularTotal() {
+    let total = carrito.reduce((acum, prod) => acum + prod.precio, 0);
+    document.getElementById("total").textContent = total;
+    return total;
+}
+
 // Función para modificar cantidad
 function modificarCantidad(id, cambio) {
   let item = carrito.find((p) => p.id === id);
@@ -67,20 +74,27 @@ function enviarPedidoWhatsApp() {
     return;
   }
 
-  let mensaje = "Hola, quiero pedir estos productos:\n";
+  function mensajeWhatsapp() {
+    let total = calcularTotal();
+    let productosTexto = carrito.map(p => `${p.nombre}: $${p.precio}`).join("\n");
+    let mensaje = `Hola! Aquí está mi pedido:\n${productosTexto}\nTotal: $${total}`;
+    return encodeURIComponent(mensaje); // Para que sea compatible con URL
+}
 
-  carrito.forEach((p, i) => {
-    mensaje += `${i + 1}. ${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}\n`;
-  });
 
   const telefono = "1159221201"; // <-- tu número
-  const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+  const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeWhatsapp)}`;
 
   window.open(url, "_blank");
 }
 
 // Evento del botón de WhatsApp
-document.getElementById("btn-whatsapp").addEventListener("click", enviarPedidoWhatsApp);
+// Evento del botón
+document.getElementById("enviarWhatsapp").addEventListener("click", () => {
+    let mensaje = mensajeWhatsapp();
+    // Abrir WhatsApp Web o la app
+    window.open(`https://wa.me/?text=${mensaje}`, "_blank");
+});
 
 // Render inicial
 mostrarProductos();
