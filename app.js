@@ -13,11 +13,9 @@ const spanTotal = document.getElementById("total");
 // Renderizar productos
 function mostrarProductos() {
   contenedor.innerHTML = "";
-
-  productos.forEach((prod) => {
+  productos.forEach(prod => {
     const card = document.createElement("div");
     card.classList.add("card");
-
     card.innerHTML = `
       <img src="${prod.imagen}" alt="${prod.nombre}">
       <h2>${prod.nombre}</h2>
@@ -28,24 +26,23 @@ function mostrarProductos() {
         <button onclick="modificarCantidad(${prod.id}, 1)">+</button>
       </div>
     `;
-
     contenedor.appendChild(card);
   });
 }
 
 // Calcular total
 function calcularTotal() {
-  let total = carrito.reduce((acum, prod) => acum + prod.precio * prod.cantidad, 0);
-  spanTotal.textContent = total.toLocaleString(); // separador de miles
+  const total = carrito.reduce((acum, p) => acum + p.precio * p.cantidad, 0);
+  spanTotal.textContent = total.toLocaleString();
   return total;
 }
 
 // Modificar cantidad
 function modificarCantidad(id, cambio) {
-  let item = carrito.find((p) => p.id === id);
+  let item = carrito.find(p => p.id === id);
 
   if (!item && cambio > 0) {
-    const producto = productos.find((p) => p.id === id);
+    const producto = productos.find(p => p.id === id);
     item = { ...producto, cantidad: 0 };
     carrito.push(item);
   }
@@ -53,16 +50,14 @@ function modificarCantidad(id, cambio) {
   if (item) {
     item.cantidad += cambio;
     if (item.cantidad < 0) item.cantidad = 0;
-
     document.getElementById(`cantidad-${id}`).textContent = item.cantidad;
-
-    // Eliminar del carrito si cantidad = 0
-    carrito = carrito.filter((p) => p.cantidad > 0);
+    carrito = carrito.filter(p => p.cantidad > 0);
   }
 
   calcularTotal();
 }
 
+// Abrir modal al presionar botón WhatsApp
 document.getElementById("btn-whatsapp").addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("El carrito está vacío 😅");
@@ -76,7 +71,7 @@ document.getElementById("cancelarCliente").addEventListener("click", () => {
   document.getElementById("modalCliente").style.display = "none";
 });
 
-// Función para enviar WhatsApp con datos del cliente
+// Enviar mensaje por WhatsApp
 document.getElementById("enviarCliente").addEventListener("click", () => {
   const nombre = document.getElementById("nombre").value.trim();
   const direccion = document.getElementById("direccion").value.trim();
@@ -88,12 +83,12 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
     return;
   }
 
-  // Generar la “tabla” de productos
+  // Generar tabla de productos
   const productosTexto = carrito.map(p => {
-    let subtotal = p.precio * p.cantidad;
-    let nombreProd = p.nombre.padEnd(20, " ");
-    let cantidad = p.cantidad.toString().padStart(2, " ");
-    let totalProd = subtotal.toString().padStart(6, " ");
+    const subtotal = p.precio * p.cantidad;
+    const nombreProd = p.nombre.padEnd(20, " ");
+    const cantidad = p.cantidad.toString().padStart(2, " ");
+    const totalProd = subtotal.toString().padStart(6, " ");
     return `${nombreProd} x${cantidad} = $${totalProd}`;
   }).join("\n");
 
@@ -117,3 +112,6 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
 
   document.getElementById("modalCliente").style.display = "none";
 });
+
+// Render inicial
+mostrarProductos();
