@@ -3,6 +3,7 @@ const productos = [
   { id: 1, nombre: "Galletitas", precio: 1200, imagen: "img/galletitas.jpg" },
   { id: 2, nombre: "Jugo", precio: 800, imagen: "img/jugo.jpg" },
   { id: 3, nombre: "Caramelos", precio: 500, imagen: "img/caramelos.jpg" },
+  { id: 4, nombre: "Alfajores Maixanas x14u", precio: 23200, imagen: "img/maixanasDubai.jpg" },
 ];
 
 // Carrito vacío al inicio
