@@ -36,7 +36,7 @@ function mostrarProductos() {
 // Calcular total
 function calcularTotal() {
   let total = carrito.reduce((acum, prod) => acum + prod.precio * prod.cantidad, 0);
-  spanTotal.textContent = total;
+  spanTotal.textContent = total.toLocaleString(); // separador de miles
   return total;
 }
 
