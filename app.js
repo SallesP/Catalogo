@@ -72,7 +72,7 @@ function mensajeWhatsapp() {
 
   const productosTexto = carrito.map(p => `${p.nombre} x${p.cantidad}: $${p.precio * p.cantidad}`).join("\n");
   const total = calcularTotal();
-  return encodeURIComponent(`Hola! Aquí está mi pedido:\n${productosTexto}\nTotal: $${total}`);
+  return encodeURIComponent(`Hola! Aquí está mi pedido:\n${productosTexto}\nTotal del pedido: $${total}`);
 }
 
 // Enviar por WhatsApp
