@@ -95,6 +95,13 @@ footer {
   background: #20b954;
 }
 
+.total {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 1.2em; /* opcional, un poco más grande */
+  color: #333;      /* opcional, color más visible */
+}
+
 .contador {
   display: flex;
   justify-content: center;

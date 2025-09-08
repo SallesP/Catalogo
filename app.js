@@ -6,15 +6,13 @@ const productos = [
   { id: 4, nombre: "Alfajores Maixanas x14u", precio: 23200, imagen: "img/maixanasDubai.jpg" },
 ];
 
-// Carrito vacío al inicio
 let carrito = [];
-
-// Contenedor de productos
 const contenedor = document.getElementById("productos");
+const spanTotal = document.getElementById("total");
 
 // Renderizar productos
 function mostrarProductos() {
-  contenedor.innerHTML = ""; // limpio por si se vuelve a renderizar
+  contenedor.innerHTML = "";
 
   productos.forEach((prod) => {
     const card = document.createElement("div");
@@ -35,66 +33,56 @@ function mostrarProductos() {
   });
 }
 
-// Función para calcular el total
+// Calcular total
 function calcularTotal() {
-    let total = carrito.reduce((acum, prod) => acum + prod.precio, 0);
-    document.getElementById("total").textContent = total;
-    return total;
+  let total = carrito.reduce((acum, prod) => acum + prod.precio * prod.cantidad, 0);
+  spanTotal.textContent = total;
+  return total;
 }
 
-// Función para modificar cantidad
+// Modificar cantidad
 function modificarCantidad(id, cambio) {
   let item = carrito.find((p) => p.id === id);
 
-  if (!item) {
-    // Si no está en el carrito y cambio > 0, lo agregamos
-    if (cambio > 0) {
-      const producto = productos.find((p) => p.id === id);
-      item = { id: producto.id, nombre: producto.nombre, precio: producto.precio, cantidad: 0 };
-      carrito.push(item);
-    } else {
-      return; // no se puede restar si no está
-    }
+  if (!item && cambio > 0) {
+    const producto = productos.find((p) => p.id === id);
+    item = { ...producto, cantidad: 0 };
+    carrito.push(item);
   }
 
-  item.cantidad += cambio;
-  if (item.cantidad < 0) item.cantidad = 0;
+  if (item) {
+    item.cantidad += cambio;
+    if (item.cantidad < 0) item.cantidad = 0;
 
-  // Actualizamos el contador en la tarjeta
-  document.getElementById(`cantidad-${id}`).textContent = item.cantidad;
+    document.getElementById(`cantidad-${id}`).textContent = item.cantidad;
 
-  // Opcional: eliminar del carrito si cantidad = 0
-  carrito = carrito.filter((p) => p.cantidad > 0);
+    // Eliminar del carrito si cantidad = 0
+    carrito = carrito.filter((p) => p.cantidad > 0);
+  }
+
+  calcularTotal();
 }
 
-// Generar link de WhatsApp
-function enviarPedidoWhatsApp() {
+// Generar mensaje de WhatsApp
+function mensajeWhatsapp() {
   if (carrito.length === 0) {
     alert("El carrito está vacío 😅");
-    return;
+    return "";
   }
 
-  function mensajeWhatsapp() {
-    let total = calcularTotal();
-    let productosTexto = carrito.map(p => `${p.nombre}: $${p.precio}`).join("\n");
-    let mensaje = `Hola! Aquí está mi pedido:\n${productosTexto}\nTotal: $${total}`;
-    return encodeURIComponent(mensaje); // Para que sea compatible con URL
+  const productosTexto = carrito.map(p => `${p.nombre} x${p.cantidad}: $${p.precio * p.cantidad}`).join("\n");
+  const total = calcularTotal();
+  return encodeURIComponent(`Hola! Aquí está mi pedido:\n${productosTexto}\nTotal: $${total}`);
 }
 
-
-  const telefono = "1159221201"; // <-- tu número
-  const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensajeWhatsapp)}`;
-
-  window.open(url, "_blank");
-}
-
-// Evento del botón de WhatsApp
-document.getElementById("enviarWhatsapp").addEventListener("click", () => {
-    let mensaje = mensajeWhatsapp();
-    // Abrir WhatsApp Web o la app
-    window.open(`https://wa.me/?text=${mensaje}`, "_blank");
+// Enviar por WhatsApp
+document.getElementById("btn-whatsapp").addEventListener("click", () => {
+  const telefono = "1159221201"; // tu número
+  const mensaje = mensajeWhatsapp();
+  if (mensaje) {
+    window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
+  }
 });
 
 // Render inicial
 mostrarProductos();
-
