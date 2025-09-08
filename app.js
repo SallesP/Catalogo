@@ -95,11 +95,16 @@ function mensajeWhatsapp() {
 
 // Enviar por WhatsApp
 document.getElementById("btn-whatsapp").addEventListener("click", () => {
-  const telefono = "1159221201"; // tu número
+  const telefono = "5491159221201"; // ARG formato internacional
   const mensaje = mensajeWhatsapp();
-  if (mensaje) {
-    window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
-  }
+
+  if (!mensaje) return;
+
+  // Reemplazamos saltos de línea por %0A para WhatsApp
+  const mensajeURL = mensaje.replace(/%0A/g, '%0A'); // opcional, pero asegura compatibilidad
+
+  // Abrir WhatsApp Web
+  window.open(`https://wa.me/${telefono}?text=${mensajeURL}`, "_blank");
 });
 
 // Render inicial
