@@ -95,7 +95,7 @@ function mensajeWhatsapp() {
 
 // Enviar por WhatsApp
 document.getElementById("btn-whatsapp").addEventListener("click", () => {
-  const telefono = "1159221201"; // tu número
+  const telefono = "5491159221201"; // tu número
   const mensaje = mensajeWhatsapp();
   if (mensaje) {
     window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
