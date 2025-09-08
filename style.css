@@ -25,6 +25,7 @@ header {
 /* Filtro de categoría */
 .filtro-categoria {
   display: block;
+  align-items: center;
   margin: 10px auto;
   max-width: 300px;
 }
