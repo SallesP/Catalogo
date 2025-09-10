@@ -24,10 +24,11 @@
       </select>
     </div>
 
-      <!-- Búsqueda por nombre -->
+    <!-- Búsqueda por nombre -->
     <div class="busqueda-producto">
       <input type="text" id="busqueda" placeholder="Buscar producto...">
     </div>
+
     <!-- Productos -->
     <section id="productos" class="grid"></section>
 
@@ -36,11 +37,27 @@
 
     <!-- Botón WhatsApp -->
     <button id="btn-whatsapp">Enviar pedido por WhatsApp</button>
+  </main>
 
-    <!-- Modal cliente -->
-    <div id="modalCliente">
-      <div class="modal-content">
-        <h2>Datos del Cliente</h2>
+  <!-- Modal cliente -->
+  <div id="modalCliente">
+    <div class="modal-content">
+      <h2>Datos del Cliente</h2>
+
+      <!-- Radios para elegir tipo de cliente -->
+      <div class="tipo-cliente">
+        <label>
+          <input type="radio" name="tipo-cliente" id="cliente-nuevo" checked>
+          Nuevo cliente
+        </label>
+        <label>
+          <input type="radio" name="tipo-cliente" id="cliente-existente">
+          Cliente existente
+        </label>
+      </div>
+
+      <!-- Sección cliente nuevo -->
+      <div id="datos-nuevo">
         <label>Nombre:</label>
         <input type="text" id="nombre">
         <label>Dirección:</label>
@@ -49,14 +66,23 @@
         <input type="text" id="localidad">
         <label>Horarios:</label>
         <input type="text" id="horarios">
-        <div class="buttons">
-          <button id="cancelarCliente">Cancelar</button>
-          <button id="enviarCliente">Enviar</button>
-        </div>
+      </div>
+
+      <!-- Sección cliente existente -->
+      <div id="datos-existente">
+        <label>ID del cliente:</label>
+        <input type="text" id="id-cliente" placeholder="Ej: 123">
+        <p class="info-id">Solo se necesita el ID del cliente existente.</p>
+      </div>
+
+      <div class="buttons">
+        <button id="cancelarCliente">Cancelar</button>
+        <button id="enviarCliente">Enviar</button>
       </div>
     </div>
-  </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
 </html>
+

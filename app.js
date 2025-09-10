@@ -20,7 +20,7 @@ selectCategoria.addEventListener('change', () => {
 // Mostrar productos filtrados por categoría y búsqueda
 // ------------------------
 function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
-  contenedor.innerHTML = ""; // Limpiar grid
+  contenedor.innerHTML = "";
 
   for (let cat in productos) {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
@@ -49,7 +49,6 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
         </div>
       `;
 
-      // Event listeners para botones + y -
       card.querySelector(".menos").addEventListener("click", () => modificarCantidad(prod.id, -1));
       card.querySelector(".mas").addEventListener("click", () => modificarCantidad(prod.id, 1));
 
@@ -80,11 +79,9 @@ function modificarCantidad(id, cambio) {
     if (item.cantidad < 1) carrito = carrito.filter(p => p.id !== id);
   }
 
-  // Actualizar solo la cantidad en la tarjeta si existe
   const spanCant = document.getElementById(`cantidad-${id}`);
   if (spanCant) spanCant.textContent = carrito.find(p => p.id === id)?.cantidad || 0;
 
-  // Mantener categoría y búsqueda actuales
   mostrarProductos(selectCategoria.value, inputBusqueda.value);
 }
 
@@ -113,29 +110,60 @@ inputBusqueda.addEventListener("input", (e) => {
 });
 
 // ------------------------
-// Modal y WhatsApp
+// Modal y WhatsApp con opción cliente nuevo / existente
 // ------------------------
+const modal = document.getElementById("modalCliente");
+const radioNuevo = document.getElementById("cliente-nuevo");
+const radioExistente = document.getElementById("cliente-existente");
+const seccionNuevo = document.getElementById("datos-nuevo");
+const seccionExistente = document.getElementById("datos-existente");
+
 document.getElementById("btn-whatsapp").addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("El carrito está vacío 😅");
     return;
   }
-  document.getElementById("modalCliente").style.display = "flex";
+  modal.style.display = "flex";
 });
 
 document.getElementById("cancelarCliente").addEventListener("click", () => {
-  document.getElementById("modalCliente").style.display = "none";
+  modal.style.display = "none";
 });
 
-document.getElementById("enviarCliente").addEventListener("click", () => {
-  const nombre = document.getElementById("nombre").value.trim();
-  const direccion = document.getElementById("direccion").value.trim();
-  const localidad = document.getElementById("localidad").value.trim();
-  const horarios = document.getElementById("horarios").value.trim();
+// Alternar secciones según tipo de cliente
+radioNuevo.addEventListener("change", () => {
+  seccionNuevo.style.display = "block";
+  seccionExistente.style.display = "none";
+});
 
-  if (!nombre || !direccion || !localidad || !horarios) {
-    alert("Por favor, completa todos los datos del cliente.");
-    return;
+radioExistente.addEventListener("change", () => {
+  seccionNuevo.style.display = "none";
+  seccionExistente.style.display = "block";
+});
+
+// Enviar mensaje
+document.getElementById("enviarCliente").addEventListener("click", () => {
+  let nombre, direccion, localidad, horarios, idCliente;
+
+  if (radioNuevo.checked) {
+    nombre = document.getElementById("nombre").value.trim();
+    direccion = document.getElementById("direccion").value.trim();
+    localidad = document.getElementById("localidad").value.trim();
+    horarios = document.getElementById("horarios").value.trim();
+
+    if (!nombre || !direccion || !localidad || !horarios) {
+      alert("Completa todos los datos del cliente nuevo.");
+      return;
+    }
+  } else if (radioExistente.checked) {
+    idCliente = document.getElementById("id-cliente").value.trim();
+    if (!idCliente) {
+      alert("Ingresa el ID del cliente existente.");
+      return;
+    }
+    // Aquí podrías buscar los datos del cliente por ID si tuvieras un JSON o API
+    nombre = `Cliente #${idCliente}`;
+    direccion = localidad = horarios = "-";
   }
 
   const productosTexto = carrito.map(p => {
@@ -165,7 +193,7 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
   const telefono = "5491159221201";
   window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
 
-  document.getElementById("modalCliente").style.display = "none";
+  modal.style.display = "none";
 });
 
 // ------------------------

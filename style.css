@@ -155,6 +155,7 @@ header {
   background: rgba(0,0,0,0.5);
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
 #modalCliente .modal-content {
@@ -162,19 +163,40 @@ header {
   padding: 20px;
   border-radius: 10px;
   width: 90%;
-  max-width: 350px;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
-#modalCliente label {
+.tipo-cliente {
+  margin-bottom: 15px;
+}
+
+#datos-nuevo, #datos-existente {
+  margin-top: 10px;
+}
+
+#datos-existente {
+  display: none;
+}
+
+#datos-nuevo label,
+#datos-existente label {
   display: block;
   margin-top: 10px;
 }
 
-#modalCliente input {
+#datos-nuevo input,
+#datos-existente input {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
   box-sizing: border-box;
+}
+
+.info-id {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 5px;
 }
 
 #modalCliente .buttons {
@@ -186,4 +208,12 @@ header {
 #modalCliente button {
   padding: 8px 12px;
   cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background: #4CAF50;
+  color: white;
+}
+
+#modalCliente button:hover {
+  background: #45a049;
 }
