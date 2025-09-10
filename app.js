@@ -86,11 +86,13 @@ function modificarCantidad(id, cambio) {
     if (item.cantidad < 1) carrito = carrito.filter(p => p.id !== id);
   }
 
+  const categoriaActual = document.getElementById("categoria").value;
+  const textoBusqueda = document.getElementById("busqueda").value; // AGREGAR
   const cantidadActual = carrito.find(p => p.id === id)?.cantidad || 0;
   const spanCant = document.getElementById(`cantidad-${id}`);
   if (spanCant) spanCant.textContent = cantidadActual;
 
-  mostrarProductos(document.getElementById("categoria").value);
+  mostrarProductos(categoriaActual, textoBusqueda); // PASAR AMBOS
   calcularTotal();
 }
 
