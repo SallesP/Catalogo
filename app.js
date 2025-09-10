@@ -1,12 +1,6 @@
-// Lista de productos con categoría
-const productos = [
-  { id: 1, nombre: "Galletitas", precio: 1200, imagen: "img/galletitas.jpg", categoria: "Golosinas" },
-  { id: 2, nombre: "Jugo", precio: 800, imagen: "img/jugo.jpg", categoria: "Bebidas" },
-  { id: 3, nombre: "Caramelos", precio: 500, imagen: "img/caramelos.jpg", categoria: "Golosinas" },
-  { id: 4, nombre: "Alfajores Maixanas x14u", precio: 23200, imagen: "img/maixanasDubai.jpg", categoria: "Golosinas" },
-];
-
+let productos = [];
 let carrito = [];
+
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 
@@ -128,5 +122,11 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
   document.getElementById("modalCliente").style.display = "none";
 });
 
-// Render inicial
-mostrarProductos();
+// 🔹 Cargar productos desde JSON y render inicial
+fetch("productos.json")
+  .then(res => res.json())
+  .then(data => {
+    productos = data;
+    mostrarProductos();
+  })
+  .catch(err => console.error("Error cargando productos:", err));
