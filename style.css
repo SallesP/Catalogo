@@ -22,6 +22,15 @@ header {
   margin-bottom: 10px;
 }
 
+.categoria-titulo {
+  display: block;        /* se asegura que ocupe todo el ancho */
+  width: 100%;           /* ocupar todo el contenedor */
+  text-align: center;    /* centra el texto */
+  font-size: 1.5rem;     /* tamaño del título */
+  font-weight: bold;     /* opcional: negrita */
+  margin: 10px 0;        /* espacio arriba y abajo */
+}
+
 /* Filtro de categoría */
 .filtro-categoria {
   display: block;
