@@ -4,21 +4,26 @@ let carrito = [];
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 
-//Mostrar productos
 function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
   contenedor.innerHTML = "";
+
+  // Mostrar título principal de la categoría
+  const h2Categoria = document.createElement("h2");
+  h2Categoria.style.textAlign = "center";
+  h2Categoria.style.marginBottom = "20px";
+
+  if (filtroCategoria === "Todas") {
+    h2Categoria.textContent = "Todos los productos";
+  } else {
+    h2Categoria.textContent = filtroCategoria;
+  }
+  contenedor.appendChild(h2Categoria);
 
   for (let cat in productos) {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
 
-    // Encabezado de categoría
-    const h2 = document.createElement("h2");
-    h2.textContent = cat;
-    contenedor.appendChild(h2);
-
     productos[cat].forEach(prod => {
-      // Filtrar por búsqueda
-      if (!prod.nombre.toLowerCase().includes(textoBusqueda)) return;
+      if (!prod.nombre.toLowerCase().includes(textoBusqueda.toLowerCase())) return;
 
       const card = document.createElement("div");
       card.classList.add("card");
@@ -62,8 +67,7 @@ function calcularTotal() {
 }
 //Busqueda
 document.getElementById("busqueda").addEventListener("input", (e) => {
-  const texto = e.target.value.toLowerCase();
-  mostrarProductos(document.getElementById("categoria").value, texto);
+  mostrarProductos(document.getElementById("categoria").value, e.target.value);
 });
 
 // Modificar cantidad respetando mínimo
