@@ -1,50 +1,55 @@
-let productos = [];
+let productos = {};
 let carrito = [];
 
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 
 // Renderizar productos con filtro de categoría
-function mostrarProductos(categoria = "Todas") {
+function mostrarProductos(filtroCategoria = "Todas") {
   contenedor.innerHTML = "";
 
-  let lista = productos;
-  if (categoria !== "Todas") {
-    lista = productos.filter(p => p.categoria === categoria);
+  for (let cat in productos) {
+    if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
+
+    // Encabezado de categoría
+    const h2 = document.createElement("h2");
+    h2.textContent = cat;
+    contenedor.appendChild(h2);
+
+    productos[cat].forEach(prod => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+
+      const itemEnCarrito = carrito.find(p => p.id === prod.id);
+      const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+      const factor = prod.minimo > 1 ? prod.minimo : 1;
+      const totalProducto = prod.precioUnitario * factor * cantidadActual;
+
+      card.innerHTML = `
+        <img src="${prod.imagen}" alt="${prod.nombre}">
+        <h3>${prod.nombre}</h3>
+        <p>Precio unitario: $${prod.precioUnitario.toLocaleString()}</p>
+        ${prod.minimo > 1 ? `<p>Mínimo (${prod.minimo}u): $${(prod.precioUnitario * prod.minimo).toLocaleString()}</p>` : ""}
+        <p>Total: $${totalProducto.toLocaleString()}</p>
+        <div class="contador">
+          <button onclick="modificarCantidad(${prod.id}, -1)">-</button>
+          <span id="cantidad-${prod.id}">${cantidadActual}</span>
+          <button onclick="modificarCantidad(${prod.id}, 1)">+</button>
+        </div>
+      `;
+
+      contenedor.appendChild(card);
+    });
   }
-
-  lista.forEach(prod => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-
-    const itemEnCarrito = carrito.find(p => p.id === prod.id);
-    const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
-
-    // Total real según cantidad y mínimo
-    const totalProducto = prod.precioUnitario * (prod.minimo > 1 ? prod.minimo : 1) * cantidadActual;
-
-    card.innerHTML = `
-      <img src="${prod.imagen}" alt="${prod.nombre}">
-      <h2>${prod.nombre}</h2>
-      <p>Precio unitario: $${prod.precioUnitario.toLocaleString()}</p>
-      ${prod.minimo > 1 ? `<p>Mínimo (${prod.minimo}u): $${(prod.precioUnitario * prod.minimo).toLocaleString()}</p>` : ""}
-      <p>Total: $${totalProducto.toLocaleString()}</p>
-      <div class="contador">
-        <button onclick="modificarCantidad(${prod.id}, -1)">-</button>
-        <span id="cantidad-${prod.id}">${cantidadActual}</span>
-        <button onclick="modificarCantidad(${prod.id}, 1)">+</button>
-      </div>
-    `;
-
-    contenedor.appendChild(card);
-  });
 }
 
 // Calcular total del carrito
 function calcularTotal() {
-  const total = carrito.reduce((acum, p) => {
+  const total = Object.values(productos).flat().reduce((acum, p) => {
+    const item = carrito.find(c => c.id === p.id);
+    if (!item) return acum;
     const factor = p.minimo > 1 ? p.minimo : 1;
-    return acum + p.precioUnitario * factor * p.cantidad;
+    return acum + p.precioUnitario * factor * item.cantidad;
   }, 0);
 
   spanTotal.textContent = total.toLocaleString();
@@ -53,11 +58,19 @@ function calcularTotal() {
 
 // Modificar cantidad respetando unidad de compra
 function modificarCantidad(id, cambio) {
+  // Buscar el producto original
+  let prodOriginal;
+  for (let cat in productos) {
+    prodOriginal = productos[cat].find(p => p.id === id);
+    if (prodOriginal) break;
+  }
+
+  if (!prodOriginal) return;
+
   let item = carrito.find(p => p.id === id);
-  const producto = productos.find(p => p.id === id);
 
   if (!item && cambio > 0) {
-    item = { ...producto, cantidad: 1 }; // 1 unidad de compra = mínimo real o 1
+    item = { ...prodOriginal, cantidad: 1 };
     carrito.push(item);
   } else if (item) {
     item.cantidad += cambio;
@@ -65,9 +78,10 @@ function modificarCantidad(id, cambio) {
   }
 
   const cantidadActual = carrito.find(p => p.id === id)?.cantidad || 0;
-  document.getElementById(`cantidad-${id}`).textContent = cantidadActual;
+  const spanCant = document.getElementById(`cantidad-${id}`);
+  if (spanCant) spanCant.textContent = cantidadActual;
 
-  mostrarProductos(document.getElementById("categoria").value); // refresca cards con total
+  mostrarProductos(document.getElementById("categoria").value);
   calcularTotal();
 }
 
@@ -76,7 +90,7 @@ document.getElementById("categoria").addEventListener("change", (e) => {
   mostrarProductos(e.target.value);
 });
 
-// Abrir modal al presionar botón WhatsApp
+// Abrir modal WhatsApp
 document.getElementById("btn-whatsapp").addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("El carrito está vacío 😅");
@@ -102,7 +116,6 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
     return;
   }
 
-  // Generar tabla de productos
   const productosTexto = carrito.map(p => {
     const factor = p.minimo > 1 ? p.minimo : 1;
     const subtotal = p.precioUnitario * factor * p.cantidad;
@@ -127,13 +140,13 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
     `TOTAL: $${total.toLocaleString()}`
   );
 
-  const telefono = "5491159221201"; // formato internacional
+  const telefono = "5491159221201";
   window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
 
   document.getElementById("modalCliente").style.display = "none";
 });
 
-// 🔹 Cargar productos desde JSON y render inicial
+// Cargar productos desde JSON y render inicial
 fetch("productos.json")
   .then(res => res.json())
   .then(data => {
