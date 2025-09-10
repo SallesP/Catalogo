@@ -17,12 +17,18 @@ function mostrarProductos(categoria = "Todas") {
     const card = document.createElement("div");
     card.classList.add("card");
 
-    const cantidadActual = carrito.find(p => p.id === prod.id)?.cantidad || 0;
+    const itemEnCarrito = carrito.find(p => p.id === prod.id);
+    const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+
+    // Total real según cantidad y mínimo
+    const totalProducto = prod.precioUnitario * (prod.minimo > 1 ? prod.minimo : 1) * cantidadActual;
 
     card.innerHTML = `
       <img src="${prod.imagen}" alt="${prod.nombre}">
       <h2>${prod.nombre}</h2>
-      <p>$${prod.precio}</p>
+      <p>Precio unitario: $${prod.precioUnitario.toLocaleString()}</p>
+      ${prod.minimo > 1 ? `<p>Mínimo (${prod.minimo}u): $${(prod.precioUnitario * prod.minimo).toLocaleString()}</p>` : ""}
+      <p>Total: $${totalProducto.toLocaleString()}</p>
       <div class="contador">
         <button onclick="modificarCantidad(${prod.id}, -1)">-</button>
         <span id="cantidad-${prod.id}">${cantidadActual}</span>
@@ -34,30 +40,34 @@ function mostrarProductos(categoria = "Todas") {
   });
 }
 
-// Calcular total
+// Calcular total del carrito
 function calcularTotal() {
-  const total = carrito.reduce((acum, p) => acum + p.precio * p.cantidad, 0);
+  const total = carrito.reduce((acum, p) => {
+    const factor = p.minimo > 1 ? p.minimo : 1;
+    return acum + p.precioUnitario * factor * p.cantidad;
+  }, 0);
+
   spanTotal.textContent = total.toLocaleString();
   return total;
 }
 
-// Modificar cantidad
+// Modificar cantidad respetando unidad de compra
 function modificarCantidad(id, cambio) {
   let item = carrito.find(p => p.id === id);
+  const producto = productos.find(p => p.id === id);
 
   if (!item && cambio > 0) {
-    const producto = productos.find(p => p.id === id);
-    item = { ...producto, cantidad: 0 };
+    item = { ...producto, cantidad: 1 }; // 1 unidad de compra = mínimo real o 1
     carrito.push(item);
-  }
-
-  if (item) {
+  } else if (item) {
     item.cantidad += cambio;
-    if (item.cantidad < 0) item.cantidad = 0;
-    document.getElementById(`cantidad-${id}`).textContent = item.cantidad;
-    carrito = carrito.filter(p => p.cantidad > 0);
+    if (item.cantidad < 1) carrito = carrito.filter(p => p.id !== id);
   }
 
+  const cantidadActual = carrito.find(p => p.id === id)?.cantidad || 0;
+  document.getElementById(`cantidad-${id}`).textContent = cantidadActual;
+
+  mostrarProductos(document.getElementById("categoria").value); // refresca cards con total
   calcularTotal();
 }
 
@@ -94,14 +104,15 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
 
   // Generar tabla de productos
   const productosTexto = carrito.map(p => {
-    const subtotal = p.precio * p.cantidad;
-    const nombreProd = p.nombre.padEnd(20, " ");
-    const cantidad = p.cantidad.toString().padStart(2, " ");
-    const totalProd = subtotal.toString().padStart(6, " ");
-    return `${nombreProd} x${cantidad} = $${totalProd}`;
+    const factor = p.minimo > 1 ? p.minimo : 1;
+    const subtotal = p.precioUnitario * factor * p.cantidad;
+    return `${p.nombre} x${p.cantidad} = $${subtotal.toLocaleString()}`;
   }).join("\n");
 
-  const total = carrito.reduce((acum, p) => acum + p.precio * p.cantidad, 0);
+  const total = carrito.reduce((acum, p) => {
+    const factor = p.minimo > 1 ? p.minimo : 1;
+    return acum + p.precioUnitario * factor * p.cantidad;
+  }, 0);
 
   const mensaje = encodeURIComponent(
     `Hola! Aquí está mi pedido:\n\n` +
@@ -113,7 +124,7 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
     `--------------------------------\n` +
     `${productosTexto}\n` +
     `--------------------------------\n` +
-    `TOTAL: $${total}`
+    `TOTAL: $${total.toLocaleString()}`
   );
 
   const telefono = "5491159221201"; // formato internacional
