@@ -4,8 +4,8 @@ let carrito = [];
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 
-// Mostrar productos
-function mostrarProductos(filtroCategoria = "Todas") {
+//Mostrar productos
+function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
   contenedor.innerHTML = "";
 
   for (let cat in productos) {
@@ -17,12 +17,14 @@ function mostrarProductos(filtroCategoria = "Todas") {
     contenedor.appendChild(h2);
 
     productos[cat].forEach(prod => {
+      // Filtrar por búsqueda
+      if (!prod.nombre.toLowerCase().includes(textoBusqueda)) return;
+
       const card = document.createElement("div");
       card.classList.add("card");
 
       const itemEnCarrito = carrito.find(p => p.id === prod.id);
       const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
-
       const factor = prod.minimo > 1 ? prod.minimo : 1;
       const totalProducto = prod.precioUnitario * factor * cantidadActual;
 
@@ -58,6 +60,11 @@ function calcularTotal() {
   spanTotal.textContent = total.toLocaleString();
   return total;
 }
+//Busqueda
+document.getElementById("busqueda").addEventListener("input", (e) => {
+  const texto = e.target.value.toLowerCase();
+  mostrarProductos(document.getElementById("categoria").value, texto);
+});
 
 // Modificar cantidad respetando mínimo
 function modificarCantidad(id, cambio) {
