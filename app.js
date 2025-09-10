@@ -1,10 +1,10 @@
-let productos = {};
+let productos = {}; // JSON por categorías
 let carrito = [];
 
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 
-// Renderizar productos con filtro de categoría
+// Mostrar productos
 function mostrarProductos(filtroCategoria = "Todas") {
   contenedor.innerHTML = "";
 
@@ -22,6 +22,7 @@ function mostrarProductos(filtroCategoria = "Todas") {
 
       const itemEnCarrito = carrito.find(p => p.id === prod.id);
       const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+
       const factor = prod.minimo > 1 ? prod.minimo : 1;
       const totalProducto = prod.precioUnitario * factor * cantidadActual;
 
@@ -45,18 +46,20 @@ function mostrarProductos(filtroCategoria = "Todas") {
 
 // Calcular total del carrito
 function calcularTotal() {
-  const total = Object.values(productos).flat().reduce((acum, p) => {
-    const item = carrito.find(c => c.id === p.id);
-    if (!item) return acum;
-    const factor = p.minimo > 1 ? p.minimo : 1;
-    return acum + p.precioUnitario * factor * item.cantidad;
-  }, 0);
+  const total = Object.values(productos)
+    .flat()
+    .reduce((acum, p) => {
+      const item = carrito.find(c => c.id === p.id);
+      if (!item) return acum;
+      const factor = p.minimo > 1 ? p.minimo : 1;
+      return acum + p.precioUnitario * factor * item.cantidad;
+    }, 0);
 
   spanTotal.textContent = total.toLocaleString();
   return total;
 }
 
-// Modificar cantidad respetando unidad de compra
+// Modificar cantidad respetando mínimo
 function modificarCantidad(id, cambio) {
   // Buscar el producto original
   let prodOriginal;
@@ -64,11 +67,9 @@ function modificarCantidad(id, cambio) {
     prodOriginal = productos[cat].find(p => p.id === id);
     if (prodOriginal) break;
   }
-
   if (!prodOriginal) return;
 
   let item = carrito.find(p => p.id === id);
-
   if (!item && cambio > 0) {
     item = { ...prodOriginal, cantidad: 1 };
     carrito.push(item);
@@ -154,3 +155,4 @@ fetch("productos.json")
     mostrarProductos();
   })
   .catch(err => console.error("Error cargando productos:", err));
+
