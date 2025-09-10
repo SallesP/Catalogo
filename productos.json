@@ -1,7 +1,7 @@
 [
-  { "id": 1, "nombre": "Capitan negro triple x12u", "precio": 16080, "imagen": "img/capitan negro triple.jpg", "categoria": "Golosinas" },
-  { "id": 2, "nombre": "Capitan blanco simple x18u", "precio": 800, "imagen": "img/capitan blanco simple.jpg", "categoria": "Golosinas" },
-  { "id": 3, "nombre": "Capitan negro simple x18u", "precio unitario": 970, "imagen": "img/capitan negro simple.jpg", "categoria": "Golosinas" },
-  { "id": 4, "nombre": "fulbito mani caja x40u", "precio unitario": 23200, "imagen": "img/maixanasDubai.jpg", "categoria": "Golosinas" }
+  { "id": 1, "nombre": "Galletitas", "precioUnitario": 1200, "minimo": 1, "imagen": "img/galletitas.jpg", "categoria": "Golosinas" },
+  { "id": 2, "nombre": "Jugo", "precioUnitario": 800, "minimo": 1, "imagen": "img/jugo.jpg", "categoria": "Bebidas" },
+  { "id": 3, "nombre": "Capitan negro simple x18u", "precioUnitario": 970, "minimo": 18, "imagen": "img/capitan_negro_simple.jpg", "categoria": "Golosinas" },
+  { "id": 4, "nombre": "Alfajores Maixanas x14u", "precioUnitario": 23200, "minimo": 14, "imagen": "img/maixanasDubai.jpg", "categoria": "Golosinas" }
 ]
 
