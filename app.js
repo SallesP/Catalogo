@@ -5,15 +5,22 @@ const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
 const selectCategoria = document.getElementById('categoria');
 const tituloCategoria = document.getElementById('titulo-categoria');
+const inputBusqueda = document.getElementById("busqueda");
 
-// Actualiza el título al cambiar el filtro
+// ------------------------
+// Actualizar título al cambiar categoría
+// ------------------------
 selectCategoria.addEventListener('change', () => {
   const categoriaSeleccionada = selectCategoria.value;
   tituloCategoria.textContent = categoriaSeleccionada;
+  mostrarProductos(categoriaSeleccionada, inputBusqueda.value);
 });
 
+// ------------------------
+// Mostrar productos filtrados por categoría y búsqueda
+// ------------------------
 function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
-  contenedor.innerHTML = "";
+  contenedor.innerHTML = ""; // Limpiar grid
 
   for (let cat in productos) {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
@@ -45,29 +52,12 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
       contenedor.appendChild(card);
     });
   }
+  calcularTotal();
 }
 
-// Calcular total del carrito
-function calcularTotal() {
-  const total = Object.values(productos)
-    .flat()
-    .reduce((acum, p) => {
-      const item = carrito.find(c => c.id === p.id);
-      if (!item) return acum;
-      const factor = p.minimo > 1 ? p.minimo : 1;
-      return acum + p.precioUnitario * factor * item.cantidad;
-    }, 0);
-
-  spanTotal.textContent = total.toLocaleString();
-  return total;
-}
-//Busqueda
-document.getElementById("busqueda").addEventListener("input", (e) => {
-  mostrarProductos(document.getElementById("categoria").value, e.target.value);
-});
-
-
-// Modificar cantidad respetando mínimo
+// ------------------------
+// Modificar cantidad del carrito
+// ------------------------
 function modificarCantidad(id, cambio) {
   // Buscar el producto original
   let prodOriginal;
@@ -86,22 +76,41 @@ function modificarCantidad(id, cambio) {
     if (item.cantidad < 1) carrito = carrito.filter(p => p.id !== id);
   }
 
-  const categoriaActual = document.getElementById("categoria").value;
-  const textoBusqueda = document.getElementById("busqueda").value; // AGREGAR
-  const cantidadActual = carrito.find(p => p.id === id)?.cantidad || 0;
+  // Actualizar cantidad en la tarjeta
   const spanCant = document.getElementById(`cantidad-${id}`);
-  if (spanCant) spanCant.textContent = cantidadActual;
+  if (spanCant) spanCant.textContent = carrito.find(p => p.id === id)?.cantidad || 0;
 
-  mostrarProductos(categoriaActual, textoBusqueda); // PASAR AMBOS
-  calcularTotal();
+  // Mantener categoría y búsqueda actuales
+  mostrarProductos(selectCategoria.value, inputBusqueda.value);
 }
 
-// Evento cambio de categoría
-document.getElementById("categoria").addEventListener("change", (e) => {
-  mostrarProductos(e.target.value);
+// ------------------------
+// Calcular total del carrito
+// ------------------------
+function calcularTotal() {
+  const total = Object.values(productos)
+    .flat()
+    .reduce((acum, p) => {
+      const item = carrito.find(c => c.id === p.id);
+      if (!item) return acum;
+      const factor = p.minimo > 1 ? p.minimo : 1;
+      return acum + p.precioUnitario * factor * item.cantidad;
+    }, 0);
+
+  spanTotal.textContent = total.toLocaleString();
+  return total;
+}
+
+// ------------------------
+// Filtrar por búsqueda en tiempo real
+// ------------------------
+inputBusqueda.addEventListener("input", (e) => {
+  mostrarProductos(selectCategoria.value, e.target.value);
 });
 
-// Abrir modal WhatsApp
+// ------------------------
+// Modal y WhatsApp
+// ------------------------
 document.getElementById("btn-whatsapp").addEventListener("click", () => {
   if (carrito.length === 0) {
     alert("El carrito está vacío 😅");
@@ -110,12 +119,10 @@ document.getElementById("btn-whatsapp").addEventListener("click", () => {
   document.getElementById("modalCliente").style.display = "flex";
 });
 
-// Cancelar modal
 document.getElementById("cancelarCliente").addEventListener("click", () => {
   document.getElementById("modalCliente").style.display = "none";
 });
 
-// Enviar mensaje por WhatsApp
 document.getElementById("enviarCliente").addEventListener("click", () => {
   const nombre = document.getElementById("nombre").value.trim();
   const direccion = document.getElementById("direccion").value.trim();
@@ -157,12 +164,15 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
   document.getElementById("modalCliente").style.display = "none";
 });
 
-// Cargar productos desde JSON y render inicial
+// ------------------------
+// Cargar productos desde JSON
+// ------------------------
 fetch("productos.json")
   .then(res => res.json())
   .then(data => {
     productos = data;
-    mostrarProductos();
+    mostrarProductos(selectCategoria.value, inputBusqueda.value);
   })
   .catch(err => console.error("Error cargando productos:", err));
+
 
