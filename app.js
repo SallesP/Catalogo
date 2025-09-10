@@ -15,18 +15,6 @@ selectCategoria.addEventListener('change', () => {
 function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
   contenedor.innerHTML = "";
 
-  // Mostrar título principal de la categoría
-  const h2Categoria = document.createElement("h2");
-  h2Categoria.style.textAlign = "center";
-  h2Categoria.style.marginBottom = "20px";
-
-  if (filtroCategoria === "Todas") {
-    h2Categoria.textContent = "Todos los productos";
-  } else {
-    h2Categoria.textContent = filtroCategoria;
-  }
-  contenedor.appendChild(h2Categoria);
-
   for (let cat in productos) {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
 
