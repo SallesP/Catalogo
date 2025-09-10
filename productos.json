@@ -1,7 +1,34 @@
 [
-  { "id": 1, "nombre": "Galletitas", "precioUnitario": 1200, "minimo": 1, "imagen": "img/galletitas.jpg", "categoria": "Golosinas" },
-  { "id": 2, "nombre": "Jugo", "precioUnitario": 800, "minimo": 1, "imagen": "img/jugo.jpg", "categoria": "Bebidas" },
-  { "id": 3, "nombre": "Capitan negro simple x18u", "precioUnitario": 970, "minimo": 18, "imagen": "img/capitannegrosimple.jpg", "categoria": "Golosinas" },
-  { "id": 4, "nombre": "Alfajores Maixanas x14u", "precioUnitario": 23200, "minimo": 14, "imagen": "img/maixanasDubai.jpg", "categoria": "Golosinas" }
+  {
+    "id": 1,
+    "nombre": "Galletitas",
+    "precioUnitario": 1200,
+    "minimo": 1,
+    "imagen": "img/galletitas.jpg",
+    "categoria": "Golosinas"
+  },
+  {
+    "id": 2,
+    "nombre": "Jugo",
+    "precioUnitario": 800,
+    "minimo": 1,
+    "imagen": "img/jugo.jpg",
+    "categoria": "Bebidas"
+  },
+  {
+    "id": 3,
+    "nombre": "Capitan negro simple x18u",
+    "precioUnitario": 970,
+    "minimo": 18,
+    "imagen": "img/capitan_negro_simple.jpg",
+    "categoria": "Golosinas"
+  },
+  {
+    "id": 4,
+    "nombre": "Alfajores Maixanas x14u",
+    "precioUnitario": 23200,
+    "minimo": 12,
+    "imagen": "img/maixanasDubai.jpg",
+    "categoria": "Golosinas"
+  }
 ]
-
