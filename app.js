@@ -3,6 +3,14 @@ let carrito = [];
 
 const contenedor = document.getElementById("productos");
 const spanTotal = document.getElementById("total");
+const selectCategoria = document.getElementById('categoria');
+const tituloCategoria = document.getElementById('titulo-categoria');
+
+// Actualiza el título al cambiar el filtro
+selectCategoria.addEventListener('change', () => {
+  const categoriaSeleccionada = selectCategoria.value;
+  tituloCategoria.textContent = categoriaSeleccionada;
+});
 
 function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
   contenedor.innerHTML = "";
@@ -69,6 +77,7 @@ function calcularTotal() {
 document.getElementById("busqueda").addEventListener("input", (e) => {
   mostrarProductos(document.getElementById("categoria").value, e.target.value);
 });
+
 
 // Modificar cantidad respetando mínimo
 function modificarCantidad(id, cambio) {
