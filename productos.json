@@ -19,7 +19,6 @@
       "precioUnitario": 1790, 
       "minimo": 14, 
       "imagen": "img/maixanasdubai.jpg" },
-
     { "id": 5, 
       "nombre": "Fulbito Mani x40u", 
       "precioUnitario": 148, 
@@ -78,12 +77,12 @@
       "imagen": "img/guaymayensimplefruta.jpg" }
   ],
   "Bebidas": [
-    { "id": 2, 
+    { "id": 17, 
       "nombre": "Jugo", 
       "precioUnitario": 800, 
       "minimo": 1, 
       "imagen": "img/jugo.jpg" },
-    { "id": 5, 
+    { "id": 18, 
       "nombre": "Agua mineral 500ml", 
       "precioUnitario": 400, 
       "minimo": 1, 
