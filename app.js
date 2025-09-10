@@ -43,15 +43,20 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
         ${prod.minimo > 1 ? `<p>Mínimo (${prod.minimo}u): $${(prod.precioUnitario * prod.minimo).toLocaleString()}</p>` : ""}
         <p>Total: $${totalProducto.toLocaleString()}</p>
         <div class="contador">
-          <button onclick="modificarCantidad(${prod.id}, -1)">-</button>
+          <button class="menos">-</button>
           <span id="cantidad-${prod.id}">${cantidadActual}</span>
-          <button onclick="modificarCantidad(${prod.id}, 1)">+</button>
+          <button class="mas">+</button>
         </div>
       `;
+
+      // Event listeners para botones + y -
+      card.querySelector(".menos").addEventListener("click", () => modificarCantidad(prod.id, -1));
+      card.querySelector(".mas").addEventListener("click", () => modificarCantidad(prod.id, 1));
 
       contenedor.appendChild(card);
     });
   }
+
   calcularTotal();
 }
 
@@ -59,7 +64,6 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
 // Modificar cantidad del carrito
 // ------------------------
 function modificarCantidad(id, cambio) {
-  // Buscar el producto original
   let prodOriginal;
   for (let cat in productos) {
     prodOriginal = productos[cat].find(p => p.id === id);
@@ -76,7 +80,7 @@ function modificarCantidad(id, cambio) {
     if (item.cantidad < 1) carrito = carrito.filter(p => p.id !== id);
   }
 
-  // Actualizar cantidad en la tarjeta
+  // Actualizar solo la cantidad en la tarjeta si existe
   const spanCant = document.getElementById(`cantidad-${id}`);
   if (spanCant) spanCant.textContent = carrito.find(p => p.id === id)?.cantidad || 0;
 
@@ -174,5 +178,4 @@ fetch("productos.json")
     mostrarProductos(selectCategoria.value, inputBusqueda.value);
   })
   .catch(err => console.error("Error cargando productos:", err));
-
 
