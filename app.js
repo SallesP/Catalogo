@@ -56,16 +56,7 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
 
     let lista = productos[cat];
-
-    // Si es objeto (tiene subcategorías)
-    if (!Array.isArray(lista)) {
-      for (let sub in lista) {
-        lista[sub].forEach(prod => renderProducto(prod));
-      }
-    } else {
-      // Categoría sin subcategorías
-      lista.forEach(prod => renderProducto(prod));
-    }
+    lista.forEach(prod => renderProducto(prod));
   }
 
   calcularTotal();
@@ -78,14 +69,7 @@ function modificarCantidad(id, cambio) {
   let prodOriginal;
   for (let cat in productos) {
     let lista = productos[cat];
-    if (Array.isArray(lista)) {
-      prodOriginal = lista.find(p => p.id === id);
-    } else {
-      for (let sub in lista) {
-        prodOriginal = lista[sub].find(p => p.id === id);
-        if (prodOriginal) break;
-      }
-    }
+    prodOriginal = lista.find(p => p.id === id);
     if (prodOriginal) break;
   }
   if (!prodOriginal) return;
@@ -112,25 +96,13 @@ function calcularTotal() {
   let total = 0;
   for (let cat in productos) {
     let lista = productos[cat];
-    if (Array.isArray(lista)) {
-      lista.forEach(p => {
-        const item = carrito.find(c => c.id === p.id);
-        if (item) {
-          const factor = p.minimo > 1 ? p.minimo : 1;
-          total += p.precioUnitario * factor * item.cantidad;
-        }
-      });
-    } else {
-      for (let sub in lista) {
-        lista[sub].forEach(p => {
-          const item = carrito.find(c => c.id === p.id);
-          if (item) {
-            const factor = p.minimo > 1 ? p.minimo : 1;
-            total += p.precioUnitario * factor * item.cantidad;
-          }
-        });
+    lista.forEach(p => {
+      const item = carrito.find(c => c.id === p.id);
+      if (item) {
+        const factor = p.minimo > 1 ? p.minimo : 1;
+        total += p.precioUnitario * factor * item.cantidad;
       }
-    }
+    });
   }
   spanTotal.textContent = total.toLocaleString();
   return total;
@@ -236,7 +208,15 @@ fetch("productos.json")
   .then(res => res.json())
   .then(data => {
     productos = data;
+
+    // Llenar el select con categorías
+    for (let cat in productos) {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      selectCategoria.appendChild(opt);
+    }
+
     mostrarProductos(selectCategoria.value, inputBusqueda.value);
   })
   .catch(err => console.error("Error cargando productos:", err));
-
