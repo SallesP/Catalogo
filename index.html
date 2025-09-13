@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo de Productos</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>Catálogo de Productos</h1>
-  </header>
-
-  <!-- Título de la categoría -->
-  <div class="categoria-titulo" id="titulo-categoria">Todas</div>
-
   <main>
     <!-- Filtro de categoría -->
     <div class="filtro-categoria">
       <label for="categoria">Filtrar por categoría:</label>
       <select id="categoria">
         <option value="Todas">Todas</option>
+        <option value="Golosinas">Golosinas</option>
+        <option value="Bebidas">Bebidas</option>
       </select>
     </div>
 
@@ -41,31 +27,37 @@
   <!-- Modal cliente -->
   <div id="modalCliente">
     <div class="modal-content">
+      <h2>Datos del Cliente</h2>
+
+      <!-- Radios para elegir tipo de cliente -->
       <div class="tipo-cliente">
-        <input type="radio" id="cliente-nuevo" name="tipo-cliente" checked>
-        <label for="cliente-nuevo">Cliente Nuevo</label>
-        <input type="radio" id="cliente-existente" name="tipo-cliente">
-        <label for="cliente-existente">Cliente Existente</label>
+        <label>
+          <input type="radio" name="tipo-cliente" id="cliente-nuevo" checked>
+          Nuevo cliente
+        </label>
+        <label>
+          <input type="radio" name="tipo-cliente" id="cliente-existente">
+          Cliente existente
+        </label>
       </div>
 
+      <!-- Sección cliente nuevo -->
       <div id="datos-nuevo">
-        <label for="nombre">Nombre:</label>
+        <label>Nombre:</label>
         <input type="text" id="nombre">
-
-        <label for="direccion">Dirección:</label>
+        <label>Dirección:</label>
         <input type="text" id="direccion">
-
-        <label for="localidad">Localidad:</label>
+        <label>Localidad:</label>
         <input type="text" id="localidad">
-
-        <label for="horarios">Horarios de entrega:</label>
+        <label>Horarios:</label>
         <input type="text" id="horarios">
       </div>
 
+      <!-- Sección cliente existente -->
       <div id="datos-existente">
-        <label for="id-cliente">ID Cliente:</label>
-        <input type="text" id="id-cliente">
-        <p class="info-id">Ingrese el ID del cliente existente</p>
+        <label>ID del cliente:</label>
+        <input type="text" id="id-cliente" placeholder="Ej: 123">
+        <p class="info-id">Solo se necesita el ID del cliente existente.</p>
       </div>
 
       <div class="buttons">
