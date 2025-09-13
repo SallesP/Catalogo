@@ -22,38 +22,50 @@ selectCategoria.addEventListener('change', () => {
 function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
   contenedor.innerHTML = "";
 
+  function renderProducto(prod) {
+    if (!prod.nombre.toLowerCase().includes(textoBusqueda.toLowerCase())) return;
+
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    const itemEnCarrito = carrito.find(p => p.id === prod.id);
+    const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+    const factor = prod.minimo > 1 ? prod.minimo : 1;
+    const totalProducto = prod.precioUnitario * factor * cantidadActual;
+
+    card.innerHTML = `
+      <img src="${prod.imagen}" alt="${prod.nombre}">
+      <h3>${prod.nombre}</h3>
+      <p>Precio unitario: $${prod.precioUnitario.toLocaleString()}</p>
+      ${prod.minimo > 1 ? `<p>Mínimo (${prod.minimo}u): $${(prod.precioUnitario * prod.minimo).toLocaleString()}</p>` : ""}
+      <p>Total: $${totalProducto.toLocaleString()}</p>
+      <div class="contador">
+        <button class="menos">-</button>
+        <span id="cantidad-${prod.id}">${cantidadActual}</span>
+        <button class="mas">+</button>
+      </div>
+    `;
+
+    card.querySelector(".menos").addEventListener("click", () => modificarCantidad(prod.id, -1));
+    card.querySelector(".mas").addEventListener("click", () => modificarCantidad(prod.id, 1));
+
+    contenedor.appendChild(card);
+  }
+
   for (let cat in productos) {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
 
-    productos[cat].forEach(prod => {
-      if (!prod.nombre.toLowerCase().includes(textoBusqueda.toLowerCase())) return;
+    let lista = productos[cat];
 
-      const card = document.createElement("div");
-      card.classList.add("card");
-
-      const itemEnCarrito = carrito.find(p => p.id === prod.id);
-      const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
-      const factor = prod.minimo > 1 ? prod.minimo : 1;
-      const totalProducto = prod.precioUnitario * factor * cantidadActual;
-
-      card.innerHTML = `
-        <img src="${prod.imagen}" alt="${prod.nombre}">
-        <h3>${prod.nombre}</h3>
-        <p>Precio unitario: $${prod.precioUnitario.toLocaleString()}</p>
-        ${prod.minimo > 1 ? `<p>Mínimo (${prod.minimo}u): $${(prod.precioUnitario * prod.minimo).toLocaleString()}</p>` : ""}
-        <p>Total: $${totalProducto.toLocaleString()}</p>
-        <div class="contador">
-          <button class="menos">-</button>
-          <span id="cantidad-${prod.id}">${cantidadActual}</span>
-          <button class="mas">+</button>
-        </div>
-      `;
-
-      card.querySelector(".menos").addEventListener("click", () => modificarCantidad(prod.id, -1));
-      card.querySelector(".mas").addEventListener("click", () => modificarCantidad(prod.id, 1));
-
-      contenedor.appendChild(card);
-    });
+    // Si es objeto (tiene subcategorías)
+    if (!Array.isArray(lista)) {
+      for (let sub in lista) {
+        lista[sub].forEach(prod => renderProducto(prod));
+      }
+    } else {
+      // Categoría sin subcategorías
+      lista.forEach(prod => renderProducto(prod));
+    }
   }
 
   calcularTotal();
@@ -65,7 +77,15 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
 function modificarCantidad(id, cambio) {
   let prodOriginal;
   for (let cat in productos) {
-    prodOriginal = productos[cat].find(p => p.id === id);
+    let lista = productos[cat];
+    if (Array.isArray(lista)) {
+      prodOriginal = lista.find(p => p.id === id);
+    } else {
+      for (let sub in lista) {
+        prodOriginal = lista[sub].find(p => p.id === id);
+        if (prodOriginal) break;
+      }
+    }
     if (prodOriginal) break;
   }
   if (!prodOriginal) return;
@@ -89,15 +109,29 @@ function modificarCantidad(id, cambio) {
 // Calcular total del carrito
 // ------------------------
 function calcularTotal() {
-  const total = Object.values(productos)
-    .flat()
-    .reduce((acum, p) => {
-      const item = carrito.find(c => c.id === p.id);
-      if (!item) return acum;
-      const factor = p.minimo > 1 ? p.minimo : 1;
-      return acum + p.precioUnitario * factor * item.cantidad;
-    }, 0);
-
+  let total = 0;
+  for (let cat in productos) {
+    let lista = productos[cat];
+    if (Array.isArray(lista)) {
+      lista.forEach(p => {
+        const item = carrito.find(c => c.id === p.id);
+        if (item) {
+          const factor = p.minimo > 1 ? p.minimo : 1;
+          total += p.precioUnitario * factor * item.cantidad;
+        }
+      });
+    } else {
+      for (let sub in lista) {
+        lista[sub].forEach(p => {
+          const item = carrito.find(c => c.id === p.id);
+          if (item) {
+            const factor = p.minimo > 1 ? p.minimo : 1;
+            total += p.precioUnitario * factor * item.cantidad;
+          }
+        });
+      }
+    }
+  }
   spanTotal.textContent = total.toLocaleString();
   return total;
 }
@@ -161,7 +195,6 @@ document.getElementById("enviarCliente").addEventListener("click", () => {
       alert("Ingresa el ID del cliente existente.");
       return;
     }
-    // Aquí podrías buscar los datos del cliente por ID si tuvieras un JSON o API
     nombre = `Cliente #${idCliente}`;
     direccion = localidad = horarios = "-";
   }
