@@ -218,19 +218,4 @@ header {
   background: #45a049;
 }
 
-.filtro-subcategoria {
-  display: block;
-  align-items: center;
-  max-width: 300px;
-  margin-top: 10px;
-}
 
-.filtro-subcategoria label {
-  margin-right: 5px;
-}
-
-.filtro-subcategoria select {
-  padding: 5px;
-  width: 100%;
-  max-width: 150px;
-}
