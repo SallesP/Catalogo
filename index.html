@@ -11,6 +11,7 @@
     <h1>Catálogo de Productos</h1>
   </header>
 
+  <!-- Título de la categoría -->
   <div class="categoria-titulo" id="titulo-categoria">Todas</div>
 
   <main>
@@ -21,7 +22,6 @@
         <option value="Todas">Todas</option>
       </select>
     </div>
-
 
     <!-- Búsqueda por nombre -->
     <div class="busqueda-producto">
@@ -39,9 +39,42 @@
   </main>
 
   <!-- Modal cliente -->
-  <!-- (todo lo tuyo de cliente sigue igual) -->
+  <div id="modalCliente">
+    <div class="modal-content">
+      <div class="tipo-cliente">
+        <input type="radio" id="cliente-nuevo" name="tipo-cliente" checked>
+        <label for="cliente-nuevo">Cliente Nuevo</label>
+        <input type="radio" id="cliente-existente" name="tipo-cliente">
+        <label for="cliente-existente">Cliente Existente</label>
+      </div>
+
+      <div id="datos-nuevo">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre">
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion">
+
+        <label for="localidad">Localidad:</label>
+        <input type="text" id="localidad">
+
+        <label for="horarios">Horarios de entrega:</label>
+        <input type="text" id="horarios">
+      </div>
+
+      <div id="datos-existente">
+        <label for="id-cliente">ID Cliente:</label>
+        <input type="text" id="id-cliente">
+        <p class="info-id">Ingrese el ID del cliente existente</p>
+      </div>
+
+      <div class="buttons">
+        <button id="cancelarCliente">Cancelar</button>
+        <button id="enviarCliente">Enviar</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
 </html>
-
