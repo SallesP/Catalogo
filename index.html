@@ -1,11 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Productos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <header>
+    <h1>Catálogo de Productos</h1>
+  </header>
+
   <main>
+    <!-- Título de la categoría -->
+    <h2 id="titulo-categoria" class="categoria-titulo">Todas</h2>
+
     <!-- Filtro de categoría -->
     <div class="filtro-categoria">
       <label for="categoria">Filtrar por categoría:</label>
       <select id="categoria">
         <option value="Todas">Todas</option>
-        <option value="Golosinas">Golosinas</option>
-        <option value="Bebidas">Bebidas</option>
+      </select>
+    </div>
+
+    <!-- Filtro de subcategoría (si lo querés usar) -->
+    <div class="filtro-subcategoria">
+      <label for="subcategoria">Filtrar por subcategoría:</label>
+      <select id="subcategoria">
+        <option value="Todas">Todas</option>
       </select>
     </div>
 
