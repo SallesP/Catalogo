@@ -200,7 +200,10 @@ fetch("productos.json")
   .then(data => {
     productos = data;
 
-    // Llenar el select con categorías principales
+    // Limpiar el select y agregar "Todas"
+    selectCategoria.innerHTML = `<option value="Todas">Todas</option>`;
+
+    // Llenar el select con categorías
     for (let cat in productos) {
       const opt = document.createElement("option");
       opt.value = cat;
@@ -208,6 +211,8 @@ fetch("productos.json")
       selectCategoria.appendChild(opt);
     }
 
+    // Mostrar todos los productos al inicio
     mostrarProductos("Todas", "");
   })
   .catch(err => console.error("Error cargando productos:", err));
+
