@@ -54,9 +54,7 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
 
   for (let cat in productos) {
     if (filtroCategoria !== "Todas" && cat !== filtroCategoria) continue;
-
-    let lista = productos[cat];
-    lista.forEach(prod => renderProducto(prod));
+    productos[cat].forEach(prod => renderProducto(prod));
   }
 
   calcularTotal();
@@ -68,8 +66,7 @@ function mostrarProductos(filtroCategoria = "Todas", textoBusqueda = "") {
 function modificarCantidad(id, cambio) {
   let prodOriginal;
   for (let cat in productos) {
-    let lista = productos[cat];
-    prodOriginal = lista.find(p => p.id === id);
+    prodOriginal = productos[cat].find(p => p.id === id);
     if (prodOriginal) break;
   }
   if (!prodOriginal) return;
@@ -83,9 +80,6 @@ function modificarCantidad(id, cambio) {
     if (item.cantidad < 1) carrito = carrito.filter(p => p.id !== id);
   }
 
-  const spanCant = document.getElementById(`cantidad-${id}`);
-  if (spanCant) spanCant.textContent = carrito.find(p => p.id === id)?.cantidad || 0;
-
   mostrarProductos(selectCategoria.value, inputBusqueda.value);
 }
 
@@ -95,8 +89,7 @@ function modificarCantidad(id, cambio) {
 function calcularTotal() {
   let total = 0;
   for (let cat in productos) {
-    let lista = productos[cat];
-    lista.forEach(p => {
+    productos[cat].forEach(p => {
       const item = carrito.find(c => c.id === p.id);
       if (item) {
         const factor = p.minimo > 1 ? p.minimo : 1;
@@ -136,7 +129,6 @@ document.getElementById("cancelarCliente").addEventListener("click", () => {
   modal.style.display = "none";
 });
 
-// Alternar secciones según tipo de cliente
 radioNuevo.addEventListener("change", () => {
   seccionNuevo.style.display = "block";
   seccionExistente.style.display = "none";
@@ -147,7 +139,6 @@ radioExistente.addEventListener("change", () => {
   seccionExistente.style.display = "block";
 });
 
-// Enviar mensaje
 document.getElementById("enviarCliente").addEventListener("click", () => {
   let nombre, direccion, localidad, horarios, idCliente;
 
@@ -209,7 +200,7 @@ fetch("productos.json")
   .then(data => {
     productos = data;
 
-    // Llenar el select con categorías
+    // Llenar el select con categorías principales
     for (let cat in productos) {
       const opt = document.createElement("option");
       opt.value = cat;
@@ -217,6 +208,6 @@ fetch("productos.json")
       selectCategoria.appendChild(opt);
     }
 
-    mostrarProductos(selectCategoria.value, inputBusqueda.value);
+    mostrarProductos("Todas", "");
   })
   .catch(err => console.error("Error cargando productos:", err));
