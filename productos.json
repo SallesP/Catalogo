@@ -1,6 +1,5 @@
 {
-  "Golosinas": {
-      "Alfajores": [
+  "Golosinas": [
       { "id": 1, "nombre": "Capitan negro triple x12u", 
       "precioUnitario": 1200, 
       "minimo": 12, 
@@ -14,9 +13,7 @@
       "nombre": "Capitan blanco simple x18u", 
       "precioUnitario": 970, 
       "minimo": 18, 
-      "imagen": "img/capitanblancosimple.jpg" }
-    ],
-    "Caramelos": [
+      "imagen": "img/capitanblancosimple.jpg" },
       { "id": 5, 
       "nombre": "Alfajores Maixanas x14u", 
       "precioUnitario": 1970, 
@@ -77,8 +74,7 @@
       "precioUnitario": 216, 
       "minimo": 20, 
       "imagen": "img/guaymayensimplefruta.jpg" }
-    ]
-  },
+    ],
   "Bebidas": [
     { "id": 17, 
       "nombre": "Jugo", 
